@@ -3,6 +3,8 @@
 // However, you must not change the surface API presented from this file,
 // and you should not need to change any other files in the project to complete the challenge
 
+import axios from 'axios'
+
 type UseCachingFetch = (url: string) => {
   isLoading: boolean;
   data: unknown;
@@ -27,14 +29,29 @@ type UseCachingFetch = (url: string) => {
  * 4. This file passes a type-check.
  *
  */
+
 export const useCachingFetch: UseCachingFetch = (url) => {
-  return {
+  let ret = {
     data: null,
-    isLoading: false,
-    error: new Error(
-      'UseCachingFetch has not been implemented, please read the instructions in DevTask.md',
-    ),
-  };
+    isLoading: true,
+    error: null,
+  }
+  axios.get(url)
+    .then(function (response) {
+      ret = {
+        data: response.data,
+        isLoading: false,
+        error: null
+      }
+    })
+    .catch(function (error) {
+      ret = {
+        data: null,
+        isLoading: false,
+        error: error
+      }
+    })
+  return ret
 };
 
 /**
